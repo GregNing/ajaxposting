@@ -26,6 +26,13 @@ class PostsController < ApplicationController
      @post.destroy     
      render :json => { :id => @post.id }      
    end
+
+   def update
+     @post = Post.find(params[:id])
+     @post.update!( post_params )
+ 
+     render :json => { :id => @post.id, :message => "ok"}
+   end
   def like
     @post = Post.find(params[:id])
     unless @post.find_like(current_user)  # 如果已经按讚过了，就略过不再新增
@@ -54,10 +61,10 @@ class PostsController < ApplicationController
  
      render :json => { :message => "ok", :flag_at => @post.flag_at, :id => @post.id }
    end
-   
+
    protected
 
    def post_params
-     params.require(:post).permit(:content)
+      params.require(:post).permit(:content, :category_id)
     end
 end
